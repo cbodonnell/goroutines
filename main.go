@@ -8,13 +8,14 @@ import (
 // main function -- this is a goroutine
 func main() {
 	// basic_example(5)
-	select_example(25)
-	// queue_example(50)
+	// select_example(25)
+	queue_example(20)
 }
 
 func basic_example(n int) {
 	c := make(chan string)
 	go count("sheep", c, n)
+	// fmt.Println(<-c) // blocks until a value is read
 	for msg := range c {
 		fmt.Println(msg)
 	}
@@ -25,7 +26,7 @@ func count(thing string, c chan string, n int) {
 		c <- fmt.Sprintf("%d %s", i, thing)
 		time.Sleep(time.Millisecond * 500)
 	}
-	close(c)
+	close(c) // need to close channel to prevent deadlock
 }
 
 func select_example(n int) {
